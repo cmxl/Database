@@ -1,8 +1,9 @@
 -- generates a sql script to drop foreign keys of the specified table
 -- neat if you want to drop/change the primary key of the specified table
 declare @SQL varchar(max) = '',
-	@table varchar(255) = 'fsmkunde';
-	
+	@table varchar(255) = 'myfancytable';
+
+
 with ReferencingFK as (
 	select fk.Name as 'FKName',
 		OBJECT_NAME(fk.parent_object_id) 'ParentTable',
@@ -16,11 +17,10 @@ with ReferencingFK as (
 		inner join sys.columns cref on fkc.referenced_object_id = cref.object_id
 		and fkc.referenced_column_id = cref.column_id
 )
-select @SQL = @SQL + 'ALTER TABLE ' + ParentTable + ' DROP CONSTRAINT [' + RTRIM(FKName) + '];' + CHAR(13)
+select 'ALTER TABLE ' + ParentTable + ' DROP CONSTRAINT [' + RTRIM(FKName) + '];'
 from ReferencingFK
 where ReferencedTable = @table
 order by ParentTable,
 	ReferencedTable,
 	FKName 
 	
-PRINT @SQL
