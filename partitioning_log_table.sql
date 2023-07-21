@@ -4,7 +4,7 @@ drop PK_Logs
 go
 
 -- in my logs i do have multiple environments and i mostly search in a distinct one including a level of interest
-create index IX_Logs_environment_level on log.Logs(environment, level)
+create index IX_Logs_level_environment on log.Logs(level, environment)
 go
 
 -- create partitions for each day
@@ -758,8 +758,10 @@ go
 
 
 -- this is a sample query which does now run ultra fast
-select id, timestamp, message, exception
+select top 20 *
 from log.Logs (nolock) 
-where timestamp between '2023-07-20 00:00:00' and '2023-07-20 23:59:59.9999999'
-and environment = 'production'
-and level = 'error'
+where timestamp between '2023-07-21 00:00:00' and '2023-07-21 23:59:59.9999999'
+and environment = 'Production'
+and level = 'Information'
+order by timestamp desc
+
