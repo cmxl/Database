@@ -81,7 +81,7 @@ select  p.spid                      as  spid
     ,   convert(float, p.login_time) as 'LoginTimeFloatDiff'
 from    sys.sysprocesses            p   with (readpast)
 where 1 = 1
---and case when p.dbid = 0 then '' else rtrim(db_name(p.dbid)) end = @dbName
+and case when p.dbid = 0 then '' else rtrim(db_name(p.dbid)) end = @dbName
 --and isnull(rtrim(p.program_name),'') = @progName
 --and rtrim(p.hostname) = @hostName
 
@@ -89,7 +89,6 @@ where 1 = 1
 ;
 
 
-declare @database varchar(40) = 'DatabaseName';
 with cte as (
 	select DB_NAME (dbid) as DBName,
 		   COUNT(dbid) as NumberOfConnections,
@@ -103,5 +102,5 @@ select
 	top 10 NumberOfConnections,
 	hostname
 from cte
-where DBName = @database
+where DBName = @dbName
 order by NumberOfConnections desc
